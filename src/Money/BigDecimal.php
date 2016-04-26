@@ -144,7 +144,7 @@ class BigDecimal {
       }
       $this->scale = $scale;
     }
-
+    
     private function setValue($value) {
       if ($value === null) {
         throw new \InvalidArgumentException('BigDecimal value cannot be null');

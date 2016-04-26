@@ -19,4 +19,4 @@ $currency = new Currency('USD');
 $money = new Money('0.12', $currency);
 $m = new Money($money);
 
-print_r($m->add('1.00'));
+print_r($m->getAmount());
