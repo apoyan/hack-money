@@ -2,14 +2,12 @@
 
 namespace Money;
 use Money\Currency\Currency;
-use Money\Money\Calculator;
 use Money\Money\Formatter;
 use Money\Exception\CurrencyException;
 use Money\Exception\MoneyException;
 use Money\Money\BigDecimal as BigDecimal;
 
 class Money {
-  private $calculator;
   private $formatter;
   private $currency;
   private $_cents;
@@ -21,8 +19,6 @@ class Money {
     } else {
       $this->_cents = new BigDecimal($obj);
     }
-
-    $this->calculator = new Calculator();
     $this->formatter = new Formatter();
   }
 
@@ -43,13 +39,13 @@ class Money {
   }
 
   public function add(Money $other) {
-    $this->assertSameCurrency($addend);
-    return new self($this->calculator->add($this->cents, $other->cents), $this->currency);
+    $this->assertSameCurrency($other);
+    return $this->_cents.add($other->_cents);
   }
 
   public function sub(Money $other) {
-    $this->assertSameCurrency($addend);
-    return new self($this->calculator->subtract($this->cents, $other->cents), $this->currency);
+    $this->assertSameCurrency($other);
+    return new self($this->_cents.sub($other->_cents));
   }
 
   public function mul(Money $other) {

@@ -12,16 +12,11 @@ require_once "./src/Exception/MoneyException.php";
 use Money\Money;
 use Money\Currency\Loader;
 use Money\Currency\Currency;
+use Money\Money\BigDecimal;
 
 
 $currency = new Currency('USD');
 $money = new Money('0.12', $currency);
 $m = new Money($money);
-print_r($m->cents());
-// print_r(new Money('1.00'));
-// $table = null;
-// if($table === null) {
-//   $table = Loader::load_currencies();
-// }
-//
-// print_r($table["usd"]);
+
+print_r($m->add('1.00'));

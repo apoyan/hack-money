@@ -2,7 +2,7 @@
 namespace Money\Money;
 
 class BigDecimal {
-    const DEFAULT_SCALE = 20;
+    const DEFAULT_SCALE = 2;
     protected $value;
     protected $scale;
 
@@ -25,7 +25,7 @@ class BigDecimal {
           } elseif ($val === null) {
             throw new \InvalidArgumentException('Null value found in provided array');
           } elseif (!$val instanceof BigDecimal) {
-            $results[] = new BigDecimal($val);
+            $results[] = new self($val);
           } else {
             $results[] = $val;
           }
@@ -46,7 +46,7 @@ class BigDecimal {
           } elseif ($val === null) {
             throw new InvalidArgumentException('Null value found in provided array');
           } else {
-            $results[] = new BigDecimal($val, $scale);
+            $results[] = new self($val, $scale);
           }
         }
       }
@@ -87,43 +87,43 @@ class BigDecimal {
     }
 
     public function add($other) {
-      return new BigDecimal(bcadd($this->value, new BigDecimal($other->value, $this->scale)), $this->scale);
+      return new self(bcadd($this->value, new self($other, $this->scale), $this->scale));
     }
 
     public function sub($other) {
-      return new BigDecimal(bcsub($this->value, new BigDecimal($other, $this->scale)), $this->scale);
+      return new self(bcsub($this->value, new self($other, $this->scale), $this->scale));
     }
 
     public function comp($other) {
-      return bccomp($this->value, new BigDecimal($other, $this->scale), $this->scale);
+      return bccomp($this->value, new self($other, $this->scale), $this->scale);
     }
 
     public function gt($other) {
-      return $this->comp(new BigDecimal($other, $this->scale)) > 0;
+      return $this->comp(new self($other, $this->scale)) > 0;
     }
 
     public function gte($other) {
-      return $this->comp(new BigDecimal($other, $this->scale)) >= 0;
+      return $this->comp(new self($other, $this->scale)) >= 0;
     }
 
     public function lt($other) {
-      return $this->comp(new BigDecimal($other, $this->scale)) < 0;
+      return $this->comp(new self($other, $this->scale)) < 0;
     }
 
     public function lte($other) {
-      return $this->comp(new BigDecimal($other, $this->scale)) <= 0;
+      return $this->comp(new self($other, $this->scale)) <= 0;
     }
 
     public function mul($other) {
-      return new BigDecimal(bcmul($this->value, new BigDecimal($other->value, $this->scale)), $this->scale);
+      return new self(bcmul($this->value, new self($other, $this->scale), $this->scale));
     }
 
     public function div($other) {
-      return new BigDecimal(bcdiv($this->value, new BigDecimal($other->value, $this->scale)), $this->scale);
+      return new self(bcdiv($this->value, new self($other, $this->scale), $this->scale));
     }
 
     public function mod($other) {
-      return new BigDecimal(bcmod($this->value, new BigDecimal($other->value, $this->scale)), $this->scale);
+      return new self(bcmod($this->value, new self($other, $this->scale), $this->scale));
     }
 
     private static function getType($var) {
