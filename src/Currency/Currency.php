@@ -1,10 +1,10 @@
 <?php
 
 namespace Money\Currency;
-use Money\Loader;
+use Money\Currency\Loader as Loader;
 
 class Currency {
-  private $data;
+  private $data = array();
   private $decimal_mark;
   private $disambiguate_symbol;
   private $html_entity;
@@ -18,22 +18,26 @@ class Currency {
   private $symbol;
   private $symbol_first;
   private $thousands_separator;
+  private static $table = null;
 
   public function __construct($id) {
-    $this->data = Currency::table[$id];
-    $decimal_mark          = data["decimal_mark"]
-    $disambiguate_symbol   = data["disambiguate_symbol"]
-    $html_entity           = data["html_entity"]
-    $iso_code              = data["iso_code"]
-    $iso_numeric           = data["iso_numeric"]
-    $name                  = data["name"]
-    $priority              = data["priority"]
-    $smallest_denomination = data["smallest_denomination"]
-    $subunit               = data["subunit"]
-    $subunit_to_unit       = data["subunit_to_unit"]
-    $symbol                = data["symbol"]
-    $symbol_first          = data["symbol_first"]
-    $thousands_separator   = data["thousands_separator"]
+    if(!isset($table)) {
+      Currency::$table = Loader::load_currencies();
+    }
+    $this->data = Currency::$table[strtolower($id)];
+    $this->decimal_mark          = $this->data["decimal_mark"];
+    // $this->disambiguate_symbol   = $this->data["disambiguate_symbol"];
+    $this->html_entity           = $this->data["html_entity"];
+    $this->iso_code              = $this->data["iso_code"];
+    $this->iso_numeric           = $this->data["iso_numeric"];
+    $this->name                  = $this->data["name"];
+    $this->priority              = $this->data["priority"];
+    $this->smallest_denomination = $this->data["smallest_denomination"];
+    $this->subunit               = $this->data["subunit"];
+    $this->subunit_to_unit       = $this->data["subunit_to_unit"];
+    $this->symbol                = $this->data["symbol"];
+    $this->symbol_first          = $this->data["symbol_first"];
+    $this->thousands_separator   = $this->data["thousands_separator"];
   }
   public function getCode() {
     return $this->iso_code;
@@ -52,10 +56,6 @@ class Currency {
   }
 
   public function exponent() {
-    return round(log10($subunit_to_unit));
-  }
-
-  private static function table() {
-    $this->table = Loader::load_currencies();
+    return round(log10($this->subunit_to_unit));
   }
 }

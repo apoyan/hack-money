@@ -14,7 +14,7 @@ final class Calculator {
     /**
      * @param int $scale
      */
-    public function __construct($scale = 14)
+    public function __construct($scale = 2)
     {
         $this->scale = $scale;
     }
