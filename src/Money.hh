@@ -1,4 +1,4 @@
-<?php
+<?hh // decl
 
 namespace Money;
 use Money\Currency\Currency;
@@ -12,7 +12,7 @@ class Money {
   private $currency;
   private $_amount;
 
-  public function __construct($obj, Currency $currency = null) {
+  public function __construct($obj, ?Currency $currency = null) {
     if($obj instanceof Money) {
       $this->_amount = $obj->amount();
       $this->currency = $obj->currency();

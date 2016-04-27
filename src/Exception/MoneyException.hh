@@ -1,4 +1,4 @@
-<?php
+<?hh // strict
 
 namespace Money\Exception;
 use Exception;

@@ -1,4 +1,4 @@
-<?php
+<?hh
 
 require_once "./src/Currency/Loader.php";
 require_once "./src/Currency/Currency.php";

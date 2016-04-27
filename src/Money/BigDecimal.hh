@@ -1,12 +1,12 @@
-<?php
+<?hh // strict
 namespace Money\Money;
 
 class BigDecimal {
     const DEFAULT_SCALE = 2;
-    protected $value;
-    protected $scale;
+    protected string $value = "0";
+    protected int $scale = 0;
 
-    public function __construct($value = 0, $scale = null) {
+    public function __construct(int $value = 0, ?int $scale = null) {
       if ($value instanceof BigDecimal) {
         $this->setScale($scale !== null ? $scale : $value->scale);
         $this->setValue($value->value);
@@ -16,55 +16,15 @@ class BigDecimal {
       }
     }
 
-    public static function toArray(array $items, $allowNullValues = false) {
-      $results = array();
-      try {
-        foreach ($items as $key => $val) {
-          if ($allowNullValues && $val === null) {
-            $results[] = null;
-          } elseif ($val === null) {
-            throw new \InvalidArgumentException('Null value found in provided array');
-          } elseif (!$val instanceof BigDecimal) {
-            $results[] = new self($val);
-          } else {
-            $results[] = $val;
-          }
-        }
-      }
-      catch(\Exception $e) {
-        throw new \InvalidArgumentException('Element at index '.$key.' could not be converted to BigDecimal!', 42, $e);
-      }
-      return $results;
-    }
-
-    public static function toArrayWithScale(array $items, $scale, $allowNullValues=false) {
-      $results = array();
-      try {
-        foreach ($items as $key => $val) {
-          if ($allowNullValues && $val === null) {
-            $results[] = null;
-          } elseif ($val === null) {
-            throw new InvalidArgumentException('Null value found in provided array');
-          } else {
-            $results[] = new self($val, $scale);
-          }
-        }
-      }
-      catch(\Exception $e) {
-        throw new \InvalidArgumentException('Element at index '.$key.' could not be converted to BigDecimal!', 42, $e);
-      }
-      return $results;
-    }
-
-    public function getValue() {
+    public function getValue(): string {
       return $this->value;
     }
 
-    public function getScale() {
+    public function getScale(): int {
       return $this->scale;
     }
 
-    public function __get($name) {
+    public function __get(string $name): mixed {
       if($name === 'value') {
         return $this->value;
       } else if($name === 'scale') {
@@ -74,31 +34,31 @@ class BigDecimal {
       }
     }
 
-    public function __toString() {
+    public function __toString(): string {
       return $this->value;
     }
 
-    public function toStringWith($scale) {
+    public function toStringWith(int $scale): string {
       return $this->format($scale);
     }
 
-    public function format($scale) {
+    public function format(int $scale): string {
       return number_format($this->value, $scale);
     }
 
-    public function add($other) {
+    public function add(string $other): BigDecimal {
       return new self(bcadd($this->value, new self($other, $this->scale), $this->scale));
     }
 
-    public function sub($other) {
+    public function sub(string $other): BigDecimal {
       return new self(bcsub($this->value, new self($other, $this->scale), $this->scale));
     }
 
-    public function comp($other) {
+    public function comp(string $other): int {
       return bccomp($this->value, new self($other, $this->scale), $this->scale);
     }
 
-    public function gt($other) {
+    public function gt(string $other) {
       return $this->comp(new self($other, $this->scale)) > 0;
     }
 
@@ -118,15 +78,15 @@ class BigDecimal {
       return new self(bcmul($this->value, new self($other, $this->scale), $this->scale));
     }
 
-    public function div($other) {
+    public function div($other): BigDecimal {
       return new self(bcdiv($this->value, new self($other, $this->scale), $this->scale));
     }
 
-    public function mod($other) {
+    public function mod($other): BigDecimal {
       return new self(bcmod($this->value, new self($other, $this->scale), $this->scale));
     }
 
-    private static function getType($var) {
+    private static function getType(mixed $var): string {
       $type = gettype($var);
       if($type === 'object')
         return get_class($var);
@@ -135,7 +95,7 @@ class BigDecimal {
       return $type;
     }
 
-    private function setScale($scale) {
+    private function setScale(int $scale): int {
       if (!is_int($scale)) {
         throw new \InvalidArgumentException('BigDecimal scale was not int, type was: "'.getType($scale).'"');
       }
@@ -144,8 +104,8 @@ class BigDecimal {
       }
       $this->scale = $scale;
     }
-    
-    private function setValue($value) {
+
+    private function setValue(mixed $value): void {
       if ($value === null) {
         throw new \InvalidArgumentException('BigDecimal value cannot be null');
       } elseif (is_string($value)) {
