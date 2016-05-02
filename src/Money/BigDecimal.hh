@@ -6,7 +6,7 @@ class BigDecimal {
     protected string $value = "0";
     protected int $scale = 0;
 
-    public function __construct(int $value = 0, ?int $scale = null) {
+    public function __construct(mixed $value = 0, ?int $scale = null) {
       if ($value instanceof BigDecimal) {
         $this->setScale($scale !== null ? $scale : $value->scale);
         $this->setValue($value->value);
@@ -54,36 +54,36 @@ class BigDecimal {
       return new self(bcsub($this->value, new self($other, $this->scale), $this->scale));
     }
 
-    public function comp(string $other): int {
+    public function comp(mixed $other): int {
       return bccomp($this->value, new self($other, $this->scale), $this->scale);
     }
 
-    public function gt(string $other) {
+    public function gt(string $other): bool {
       return $this->comp(new self($other, $this->scale)) > 0;
     }
 
-    public function gte($other) {
+    public function gte(string $other): bool {
       return $this->comp(new self($other, $this->scale)) >= 0;
     }
 
-    public function lt($other) {
+    public function lt(string $other): bool {
       return $this->comp(new self($other, $this->scale)) < 0;
     }
 
-    public function lte($other) {
+    public function lte(string $other): bool {
       return $this->comp(new self($other, $this->scale)) <= 0;
     }
 
-    public function mul($other) {
+    public function mul(string $other): BigDecimal {
       return new self(bcmul($this->value, new self($other, $this->scale), $this->scale));
     }
 
-    public function div($other): BigDecimal {
+    public function div(string $other): BigDecimal {
       return new self(bcdiv($this->value, new self($other, $this->scale), $this->scale));
     }
 
-    public function mod($other): BigDecimal {
-      return new self(bcmod($this->value, new self($other, $this->scale), $this->scale));
+    public function mod(string $other): BigDecimal {
+      return new self(bcmod($this->value, new self($other, $this->scale)), $this->scale);
     }
 
     private static function getType(mixed $var): string {
@@ -95,12 +95,12 @@ class BigDecimal {
       return $type;
     }
 
-    private function setScale(int $scale): int {
+    private function setScale(int $scale): mixed {
       if (!is_int($scale)) {
-        throw new \InvalidArgumentException('BigDecimal scale was not int, type was: "'.getType($scale).'"');
+        throw new \InvalidArgumentException('BigDecimal scale was not int, type was: "'.BigDecimal::getType($scale).'"');
       }
       elseif ($scale < 0) {
-        throw new \InvalidArgumentException('BigDecimal scale cannot be negative value: "'.getType($scale).'"');
+        throw new \InvalidArgumentException('BigDecimal scale cannot be negative value: "'.BigDecimal::getType($scale).'"');
       }
       $this->scale = $scale;
     }
@@ -119,7 +119,7 @@ class BigDecimal {
       } elseif (is_float($value)) {
         $this->value = bcadd($value, 0, $this->scale);
       } else {
-        throw new \InvalidArgumentException('Invalid type for BigDecimal value, type was: "'.getType($value).'"');
+        throw new \InvalidArgumentException('Invalid type for BigDecimal value, type was: "'.BigDecimal::getType($value).'"');
       }
   }
 }

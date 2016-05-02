@@ -9,11 +9,11 @@ class Currency {
   private string $iso_code;
   private string $iso_numeric;
   private string $name;
-  private int $smallest_denomination;
   private string $subunit;
-  private int $subunit_to_unit;
   private string $symbol;
   private string $thousands_separator;
+  private int $subunit_to_unit;
+  private int $smallest_denomination;
   private static array<string, array<string, mixed>> $table = [];
 
   public function __construct(string $id) {
