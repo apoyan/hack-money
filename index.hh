@@ -1,4 +1,4 @@
-<?hh
+<?hh // decl
 
 require_once "./src/Currency/Loader.php";
 require_once "./src/Currency/Currency.php";
@@ -18,5 +18,5 @@ use Money\Money\BigDecimal;
 $currency = new Currency('USD');
 $money = new Money('0.12', $currency);
 $m = new Money($money);
-
+// $m->format();
 print_r($m->getAmount());

@@ -14,11 +14,11 @@ class Currency {
   private string $thousands_separator;
   private int $subunit_to_unit;
   private int $smallest_denomination;
-  private static array<string, array<string, mixed>> $table = [];
+  private static Map<string, Map<string, mixed>> $table = Map { };
 
   public function __construct(string $id) {
-    if([] == Currency::$table) {
-      Currency::$table = Loader::load_currencies();
+    if(Currency::$table->isEmpty()) {
+      Currency::$table = new Map(Loader::load_currencies());
     }
     $data = Currency::$table[(string)strtolower($id)];
     $this->decimal_mark          = (string) $data["decimal_mark"];
