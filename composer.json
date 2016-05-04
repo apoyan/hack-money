@@ -6,7 +6,7 @@
     "homepage": "https://github.com/apoyan/hack-money",
     "license": "MIT",
     "autoload": {
-        "psr-0": { "Money\\" : "src/" }
+        "psr-0": { "" : "src/" }
     },
     "require": {
     },
