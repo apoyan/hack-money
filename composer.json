@@ -1,0 +1,20 @@
+{
+    "name": "apoyan/hack-money",
+    "type": "library",
+    "description": "A Hack Library for dealing with money and currency conversion.",
+    "keywords": ["money", "vo", "value object"],
+    "homepage": "https://github.com/apoyan/hack-money",
+    "license": "MIT",
+    "autoload": {
+        "psr-0": { "Omnipay\\Citigate\\" : "src/" }
+    },
+    "require": {
+    },
+    "require-dev": {
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}

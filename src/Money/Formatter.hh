@@ -11,14 +11,17 @@ class Formatter {
   private string $thousands_separator = ".";
   private string $decimal_mark = ".";
   private bool  $no_cents_if_whole = false;
+  private int $exponent = 2;
 
   public function format(array<string, mixed> $rules, Money $money): string {
     $formatted = "";
     $this->rules = $rules;
     $amount = $money->getAmount();
+    $this->exponent = $money->currency()->exponent();
 
     if($this->hasKeyValue("no_cents_if_whole", true) && $this->if_whole($amount)) {
       $amount = intval($amount);
+      $this->exponent = 0;
     }
 
     if(array_key_exists("decimal_mark", $this->rules)) {
@@ -28,7 +31,7 @@ class Formatter {
     if(array_key_exists("thousands_separator", $this->rules)) {
       $this->thousands_separator = (string) $this->rules['thousands_separator'];
     }
-    $amount = number_format(floatval($money->getAmount()), $money->currency()->exponent(), $this->decimal_mark, $this->thousands_separator);
+    $amount = number_format(floatval($money->getAmount()), $this->exponent, $this->decimal_mark, $this->thousands_separator);
     $amount = strval($amount);
 
     if($this->hasKeyValue("with_symbol", true)) {
@@ -36,9 +39,9 @@ class Formatter {
     }
 
     if($this->hasKeyValue("symbol_position", "after")) {
-      $formatted = $amount." ".$formatted;
+      $formatted = $amount.$formatted;
     } else {
-      $formatted = $formatted." ".$amount;
+      $formatted = $formatted.$amount;
     }
 
     if($this->hasKeyValue("with_currency", true)) {

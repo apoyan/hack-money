@@ -48,8 +48,14 @@ class Currency {
     return $this->getCode();
   }
 
-  public function equals(Currency $other_currency): bool {
-    return $this->iso_code === $other_currency->iso_code;
+  public function equals(mixed $other_currency): bool {
+    if($other_currency instanceof Currency) {
+      return $this->iso_code === $other_currency->iso_code;
+    } elseif(is_string($other_currency)) {
+      return $this->iso_code === $other_currency;
+    } else {
+      return false;
+    }
   }
 
   public function exponent(): int {

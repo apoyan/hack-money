@@ -11,14 +11,23 @@ class Money {
   private Formatter $formatter;
   private Currency $currency;
   private BigDecimal $_amount;
+  const DEFAULT_CURRENCY = "USD";
 
-  public function __construct(mixed $obj, Currency $currency): void {
+  public function __construct(mixed $obj, mixed $currency): void {
     if($obj instanceof Money) {
       $this->_amount = $obj->amount();
       $this->currency = $obj->currency();
     } else {
       $this->_amount = new BigDecimal($obj);
-      $this->currency = $currency;
+
+      if($currency instanceof Currency) {
+        $this->currency = $currency;
+      } else if(is_string($currency)) {
+        $this->currency = new Currency($currency);
+      } else {
+        $this->currency = new Currency(Money::DEFAULT_CURRENCY);
+      }
+
     }
     $this->formatter = new Formatter();
   }
@@ -33,6 +42,10 @@ class Money {
 
   public function currency(): Currency {
     return $this->currency;
+  }
+
+  public function getCurrency(): string {
+    return $this->currency->getCode();
   }
 
   public function format(?array<string, mixed> $rules = null): string {
