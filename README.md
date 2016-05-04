@@ -2,7 +2,7 @@
 
 **A Hack Library for dealing with money and currency conversion**
 
-
+[![Latest Stable Version](https://poser.pugx.org/apoyan/hack-money/v/stable)](https://packagist.org/packages/apoyan/hack-money) [![Total Downloads](https://poser.pugx.org/apoyan/hack-money/downloads)](https://packagist.org/packages/apoyan/hack-money) [![Latest Unstable Version](https://poser.pugx.org/apoyan/hack-money/v/unstable)](https://packagist.org/packages/apoyan/hack-money) [![License](https://poser.pugx.org/apoyan/hack-money/license)](https://packagist.org/packages/apoyan/hack-money)
 
 ## Installation
 
