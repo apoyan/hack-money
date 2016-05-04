@@ -1,13 +1,12 @@
 <?hh // decl
 
-require_once "./src/Currency/Loader.php";
-require_once "./src/Currency/Currency.php";
-require_once "./src/Money/Calculator.php";
-require_once "./src/Money/BigDecimal.php";
-require_once "./src/Money/Formatter.php";
-require_once "./src/Money.php";
-require_once "./src/Exception/CurrencyException.php";
-require_once "./src/Exception/MoneyException.php";
+require_once "./src/Currency/Loader.hh";
+require_once "./src/Currency/Currency.hh";
+require_once "./src/Money/BigDecimal.hh";
+require_once "./src/Money/Formatter.hh";
+require_once "./src/Money.hh";
+require_once "./src/Exception/CurrencyException.hh";
+require_once "./src/Exception/MoneyException.hh";
 
 use Money\Money;
 use Money\Currency\Loader;
@@ -16,7 +15,21 @@ use Money\Money\BigDecimal;
 
 
 $currency = new Currency('USD');
-$money = new Money('0.12', $currency);
-$m = new Money($money);
+$currency_2 = new Currency('EUR');
+
+$money = new Money("-1000000.00", $currency);
+$money_2 = new Money('100', $currency);
+
+// $m = new Money($money);
 // $m->format();
-print_r($m->getAmount());
+print_r($money->format(
+  [
+    "sign" => true,
+    "with_currency" => true,
+    "no_cents_if_whole" => true,
+    "thousands_separator" => ' ',
+    "decimal_mark" => ',',
+    "with_symbol" => true,
+    "symbol_position" => "before"
+  ]
+));

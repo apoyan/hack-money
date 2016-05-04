@@ -36,6 +36,10 @@ class Currency {
     return $this->iso_code;
   }
 
+  public function getSymbol(): string {
+    return $this->symbol;
+  }
+
   public function getName(): string {
     return $this->name;
   }
@@ -49,6 +53,6 @@ class Currency {
   }
 
   public function exponent(): int {
-    return round(log10($this->subunit_to_unit));
+    return intval(round(log10($this->subunit_to_unit)));
   }
 }

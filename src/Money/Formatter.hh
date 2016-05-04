@@ -5,7 +5,6 @@ use Money\Money;
 
 class Formatter {
   private array<string, mixed> $rules = [];
-  private bool $sign = false;
   private bool $with_symbol = false;
   private bool $with_currency = false;
   private string $symbol_position = "before";
@@ -15,38 +14,44 @@ class Formatter {
 
   public function format(array<string, mixed> $rules, Money $money): string {
     $formatted = "";
-    $amount = $money->getAmount();
     $this->rules = $rules;
-    $sign = (substr($money->getAmount(), 0, 1) === '-') ? '-' : '';
-    $thousands_separator = array_key_exists("thousands_separator", $this->rules) ?? $this->rules["thousands_separator"];
-    $decimal_mark = array_key_exists("decimal_mark", $this->rules) ?? $this->rules["decimal_mark"];
-    $amount = number_format(floatval($money->getAmount()), $money->currency()->exponent(), $decimal_mark, $thousands_separator);
+    $amount = $money->getAmount();
 
-    if($this->hasKeyValue("no_cents_if_whole", true)) {
-      $amount = strval(intval($amount));
-    } else {
-      $amount = strval($amount);
+    if($this->hasKeyValue("no_cents_if_whole", true) && $this->if_whole($amount)) {
+      $amount = intval($amount);
     }
 
+    if(array_key_exists("decimal_mark", $this->rules)) {
+      $this->decimal_mark = (string) $this->rules['decimal_mark'];
+    }
+
+    if(array_key_exists("thousands_separator", $this->rules)) {
+      $this->thousands_separator = (string) $this->rules['thousands_separator'];
+    }
+    $amount = number_format(floatval($money->getAmount()), $money->currency()->exponent(), $this->decimal_mark, $this->thousands_separator);
+    $amount = strval($amount);
+
     if($this->hasKeyValue("with_symbol", true)) {
-      $formatted = $money->currency()->getCode();
+      $formatted = $money->currency()->getSymbol();
     }
 
     if($this->hasKeyValue("symbol_position", "after")) {
-      $formatted = $formatted." ".$money->currency()->getCode();
+      $formatted = $amount." ".$formatted;
     } else {
-      $formatted = $money->currency()->getCode()." ".$formatted;
+      $formatted = $formatted." ".$amount;
     }
 
     if($this->hasKeyValue("with_currency", true)) {
-      $formatted = $formatted." ".$money->currency()->getName();
-    }
-
-    if($this->hasKeyValue("sign", true)) {
-      $formatted = $sign.$formatted;
+      $formatted = $formatted." ".$money->currency()->getCode();
     }
 
     return $formatted;
+  }
+
+  private function if_whole(string $amount): bool {
+    $x = floatval($amount);
+    $x -= floor($x);
+    return $x == 0;
   }
 
   private function hasKeyValue(string $key, mixed $value):bool {

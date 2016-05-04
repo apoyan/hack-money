@@ -35,7 +35,7 @@ class Money {
     return $this->currency;
   }
 
-  public function format(?array<string, mixed> $rules): string {
+  public function format(?array<string, mixed> $rules = null): string {
     $rules = $rules ?? [];
     return $this->formatter->format($rules, $this);
   }
