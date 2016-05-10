@@ -36,6 +36,11 @@ class Money {
     return $this->_amount;
   }
 
+  public function to_cents(): int {
+    $temp = new BigDecimal($this->getAmount(), $this->currency->exponent());
+    return intval(preg_replace("/[^0-9-]/", "", $temp));
+  }
+
   public function getAmount(): string {
     return $this->_amount->getValue();
   }
