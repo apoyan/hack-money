@@ -13,23 +13,24 @@ class Money {
   private BigDecimal $_amount;
   const DEFAULT_CURRENCY = "USD";
 
-  public function __construct(mixed $obj, mixed $currency): void {
-    if($obj instanceof Money) {
+  public function __construct(mixed $obj, mixed $currency, bool $from_cents = false): void {
+    if($from_cents) {
+      $this->currency = Money::to_currency($currency);
+      $exponent = $this->currency->exponent();
+      $this->_amount = new BigDecimal(bcdiv(strval($obj), $this->currency->getSubUnit(), $exponent));
+    } else if($obj instanceof Money) {
       $this->_amount = $obj->amount();
       $this->currency = $obj->currency();
     } else {
       $this->_amount = new BigDecimal($obj);
-
-      if($currency instanceof Currency) {
-        $this->currency = $currency;
-      } else if(is_string($currency)) {
-        $this->currency = new Currency($currency);
-      } else {
-        $this->currency = new Currency(Money::DEFAULT_CURRENCY);
-      }
+      $this->currency = Money::to_currency($currency);
 
     }
     $this->formatter = new Formatter();
+  }
+
+  public static function fromCents(mixed $cents, mixed $currency): Money {
+    return new self($cents, $currency, true);
   }
 
   public function amount(): BigDecimal {
@@ -39,6 +40,10 @@ class Money {
   public function to_cents(): int {
     $temp = new BigDecimal($this->getAmount(), $this->currency->exponent());
     return intval(preg_replace("/[^0-9-]/", "", $temp));
+  }
+
+  public function __toString(): string {
+    return $this->getAmount();
   }
 
   public function getAmount(): string {
@@ -90,5 +95,17 @@ class Money {
     if (!$this->isSameCurrency($other)) {
       throw new CurrencyException('Currencies must be identical');
     }
+  }
+
+  private static function to_currency(mixed $currency): Currency {
+    if($currency instanceof Currency) {
+      $temp_currency = $currency;
+    } else if(is_string($currency)) {
+      $temp_currency = new Currency($currency);
+    } else {
+      $temp_currency = new Currency(Money::DEFAULT_CURRENCY);
+    }
+
+    return $temp_currency;
   }
 }

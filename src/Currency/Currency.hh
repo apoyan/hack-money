@@ -44,6 +44,10 @@ class Currency {
     return $this->name;
   }
 
+  public function getSubUnit(): int {
+    return $this->subunit_to_unit;
+  }
+
   public function __toString(): string {
     return $this->getCode();
   }
