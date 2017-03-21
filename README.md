@@ -41,8 +41,8 @@ $money->getAmount(); // => 10.00
 $money->getCurrency(); // => "USD"
 
 # Comparisons
-$money.equals($money_2); // => false
-$money.equals($money); // => true
+$money->equals($money_2); // => false
+$money->equals($money); // => true
 $money->isSameCurrency($money_2); // => true
 
 # Arithmetic
@@ -81,8 +81,8 @@ $currency->getName(); // => "United States Dollar"
 $currency->getSymbol(); // => "$"
 $currency->exponent(); // => 2
 
-$currency.equals($currency_2); // => false
-$currency.equals($currency_3); // => true
-$currency.equals("USD"); // => true
+$currency->equals($currency_2); // => false
+$currency->equals($currency_3); // => true
+$currency->equals("USD"); // => true
 
 ```
